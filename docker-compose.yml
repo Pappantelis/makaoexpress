@@ -1,0 +1,26 @@
+version: "3"
+services:
+  express-makao:
+    build: .
+    container_name: expressmakao
+    restart: always
+    ports:
+      - "4000:4000"
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.EXPRESSMAKAO.rule=Host(`makaoexpress.makaoxanthi.org`)"
+      - "traefik.http.routers.express.entrypoints=websecure"
+      - "traefik.http.routers.express.tls.certResolver=letsencrypt"
+      - "traefik.http.services.express.loadbalancer.server.port=4000"
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+    volumes:
+      - .:/app
+    command: ["npm", "start"]
+
+networks:
+  dokploy-network:
+    external: true
