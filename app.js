@@ -3,7 +3,8 @@ const { Server } = require("socket.io");
 const http = require("http");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const routes = require("./routes/orders");
+const orderRoutes = require("./routes/orders");
+const waitingTimeRoutes = require("./routes/waitingTime"); // Προσθήκη του νέου route
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ app.use(express.json());
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://www.makaoxanthi.org", // Next.js frontend URL
+    origin: process.env.OFFLINE_HOST || process.env.ONLINE_HOST, // Χρήση δυναμικής τιμής
   },
 });
 
@@ -34,7 +35,16 @@ app.use(
     req.io = io; // Αποθηκεύουμε το io στο req για να το χρησιμοποιήσουμε στα routes
     next();
   },
-  routes
+  orderRoutes
+);
+
+app.use(
+  "/api/waitingTime",
+  (req, res, next) => {
+    req.io = io; // Πέρασμα του io για το waitingTime route
+    next();
+  },
+  waitingTimeRoutes
 );
 
 const PORT = process.env.PORT || 4000;
