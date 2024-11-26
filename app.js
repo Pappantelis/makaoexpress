@@ -5,6 +5,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const orderRoutes = require("./routes/orders");
 const waitingTimeRoutes = require("./routes/waitingTime"); // Προσθήκη του νέου route
+const cancelRoutes = require("./routes/cancel"); // Προσθήκη του νέου route
 
 dotenv.config();
 
@@ -45,6 +46,15 @@ app.use(
     next();
   },
   waitingTimeRoutes
+);
+
+app.use(
+  "/api/cancel",
+  (req, res, next) => {
+    req.io = io; // Πέρασμα του io για το waitingTime route
+    next();
+  },
+  cancelRoutes
 );
 
 const PORT = process.env.PORT || 4000;
