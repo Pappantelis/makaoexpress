@@ -17,7 +17,7 @@ app.use(express.json());
 
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.OFFLINE_HOST || process.env.ONLINE_HOST, // Χρήση δυναμικής τιμής
+    origin: "https://www.makaoxanthi.org", // Χρήση δυναμικής τιμής
   },
 });
 
